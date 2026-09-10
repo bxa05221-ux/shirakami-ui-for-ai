@@ -1,4 +1,4 @@
-from shirakami_ui_for_ai import ObservationContext, ObservationResult, ObservationRecord
+from shirakami_ui_for_ai import ObservationContext, ObservationResult, ObservationRecord, observe
 import pytest
 
 
@@ -63,3 +63,28 @@ def test_context_result_mismatch_is_rejected():
 
     with pytest.raises(ValueError):
         ObservationRecord(context=context, result=result)
+
+
+def test_observe_constructs_record_without_interpretation():
+    context = ObservationContext(
+        context_id="ctx-api",
+        timestamp="2026-09-10T00:00:00+09:00",
+        source="test",
+        relation="one-to-one",
+        conditions={"setting": "quiet"},
+    )
+
+    record = observe(
+        context,
+        {"raw": "observed"},
+        uncertainty="unresolved",
+        result_id="result-api",
+    )
+
+    assert record.context is context
+    assert record.result.context_id == "ctx-api"
+    assert record.result.result_id == "result-api"
+    assert record.result.value == {"raw": "observed"}
+    assert record.result.uncertainty == "unresolved"
+    assert not hasattr(record.result, "personality")
+    assert not hasattr(record.result, "intent")

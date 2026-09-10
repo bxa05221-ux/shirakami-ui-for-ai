@@ -1,8 +1,4 @@
-"""Minimal observation-boundary data structures.
-
-These structures preserve observation conditions and observed results without
-turning them into person-level or domain-level conclusions.
-"""
+"""Minimal observation-boundary data structures."""
 
 from dataclasses import dataclass
 from typing import Any, Mapping
@@ -39,3 +35,23 @@ class ObservationRecord:
     def __post_init__(self) -> None:
         if self.result.context_id != self.context.context_id:
             raise ValueError("ObservationResult.context_id must match ObservationContext.context_id")
+
+
+def observe(
+    context: ObservationContext,
+    value: Any,
+    *,
+    uncertainty: Any = None,
+    result_id: str,
+) -> ObservationRecord:
+    """Construct an ObservationRecord without inference or interpretation."""
+
+    return ObservationRecord(
+        context=context,
+        result=ObservationResult(
+            result_id=result_id,
+            context_id=context.context_id,
+            value=value,
+            uncertainty=uncertainty,
+        ),
+    )
