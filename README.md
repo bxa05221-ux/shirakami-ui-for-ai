@@ -2,6 +2,8 @@
 
 UI for AI — an implementation project for the boundary between human Landscape and AI interaction.
 
+[日本語 README](README.ja.md)
+
 ## Position
 
 `shirakami-OS` is the Runtime foundation.
